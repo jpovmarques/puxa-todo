@@ -1,0 +1,16 @@
+.macos-grey {
+  background: rgb(234, 234, 253) !important;
+}
+
+.macos-font-colot {
+  color: #1a1a1a !important;
+}
+
+a:hover {
+  background: rgb(6, 96, 245) !important;
+  color: white !important;
+}
+
+a {
+  font-family: "Lucida Grande";
+}
