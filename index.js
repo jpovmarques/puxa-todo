@@ -1,52 +1,90 @@
-const todoList = ['Fazer isto', 'Fazer aquilo', 'Acabar a coisa', 'Fazer isto', 'Fazer aquilo', 'Acabar a coisa'];
+const db = new PouchDB('todos');
+
+function addTodo(text) {
+  const todo = {
+    _id: new Date().toISOString(),
+    title: text,
+    completed: false
+  };
+  db.put(todo);
+}
+
+addTodo('merge with develop')
+addTodo('fix routing')
+addTodo('refactor class')
+addTodo('finish todo app')
+addTodo('do presentation')
+addTodo('merge with develop')
+addTodo('fix routing')
+addTodo('refactor class')
+addTodo('finish todo app')
+addTodo('do presentation')
+addTodo('merge with develop')
+addTodo('fix routing')
+addTodo('refactor class')
+addTodo('finish todo app')
+addTodo('do presentation')
+
+function deleteTodo(todo) {
+  console.log('delete todo', todo);
+  db.remove(todo);
+}
+
+function toggleTodo(todo) {
+  console.log('toggle todo', todo);
+}
+
+
+const createTodoListItem = (todo) => {
+  console.log('todo', todo);
+  const li = document.createElement('LI');
+
+  const a = document.createElement('a');
+  a.classList.add('small');
+  a.classList.add('macos-font-color');
+  a.textContent = todo.title;
+
+  const deleteSpan = document.createElement('SPAN');
+  deleteSpan.id = todo._id;
+  deleteSpan.addEventListener('click', deleteTodo.bind(this, todo));
+  deleteSpan.classList.add('fa');
+  deleteSpan.classList.add('fa-times');
+
+  const addSpan = document.createElement('SPAN');
+  addSpan.id = todo._id;
+  addSpan.addEventListener('click', toggleTodo.bind(this, todo));
+  addSpan.classList.add('fa');
+  addSpan.classList.add('fa-check');
+
+  a.appendChild(deleteSpan);
+  a.appendChild(addSpan);
+  li.appendChild(a);
+
+  return li;
+}
+
+const redrawTodosUI = (allTodos) => {
+  const ul = document.getElementById('list');
+  ul.innerHTML = '';
+  allTodos.forEach((todo) => {
+    ul.appendChild(createTodoListItem(todo.doc));
+  });
+}
+
+const showAllTodos = () => {
+  db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+    redrawTodosUI(doc.rows);
+  });
+}
+
+db.changes({
+  since: 'now',
+  live: true
+}).on('change', showAllTodos);
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const list = document.getElementById("list");
-  buildMenuFromList(list, todoList);
-  console.log(list)
-
+  showAllTodos();
+  console.log(list);
 });
-
-const buildMenuFromList = (context, stringList) => (
-  stringList.map(item => {
-    const listItem = createCustomElementLi();
-    createCustomElementLink(listItem, item);
-    context.appendChild(listItem);
-  })
-);
-
-const createCustomElementLi = () => (
-  document.createElement('LI')
-)
-
-const createCustomElementLink = (context, text) => {
-  const linkItem = document.createElement('a');
-  linkItem.classList.add('small');
-  linkItem.classList.add('macos-font-color');
-  linkItem.textContent = text;
-  createIconButton(linkItem, ['fa', 'fa-times'], deleteTodo);
-  createIconButton(linkItem, ['fa', 'fa-check'], toggleTodo);
-  context.appendChild(linkItem);
-}
-
-const createIconButton = (context, cssClassList, action) => {
-  const span = createSpan(cssClassList, action);
-  context.appendChild(span);
-}
-
-const createSpan = (cssClassList, action) => {
-  const span = document.createElement('SPAN');
-  span.onclick = action;
-  for (i of cssClassList) {
-    span.classList.add(i);
-  }
-  return span;
-}
-
-const deleteTodo = () => {
-  console.log('delete todo');
-}
-
-const toggleTodo = () => {
-  console.log('toggle todo');
-}
