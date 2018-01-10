@@ -1,6 +1,5 @@
 const menubar = require('menubar')
 
-
 const options = {
   height:158,
   width:300,

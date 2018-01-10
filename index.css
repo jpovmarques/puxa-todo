@@ -6,11 +6,35 @@
   color: #1a1a1a !important;
 }
 
-a:hover {
-  background: rgb(6, 96, 245) !important;
-  color: white !important;
+.transparent {
+  color: transparent !important;
 }
 
 a {
   font-family: "Lucida Grande";
+}
+
+a:hover {
+  background: transparent !important;
+  cursor:default;
+}
+
+span:hover {
+  color: black !important;
+  cursor:pointer;
+}
+
+input {
+  font-family: "Lucida Grande";
+  border: 0;
+  background: transparent !important;
+  cursor:pointer;
+}
+
+input:hover ~ span {
+  color: black !important;
+}
+
+input:focus {
+  outline: none;
 }

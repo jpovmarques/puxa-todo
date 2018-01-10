@@ -1,29 +1,15 @@
+// TODO: add new icon for time schedule with notification
+
 const db = new PouchDB('todos');
 
 function addTodo(text) {
   const todo = {
-    _id: new Date().toISOString(),
+    _id: uuidv4(),
     title: text,
     completed: false
   };
   db.put(todo);
 }
-
-addTodo('merge with develop')
-addTodo('fix routing')
-addTodo('refactor class')
-addTodo('finish todo app')
-addTodo('do presentation')
-addTodo('merge with develop')
-addTodo('fix routing')
-addTodo('refactor class')
-addTodo('finish todo app')
-addTodo('do presentation')
-addTodo('merge with develop')
-addTodo('fix routing')
-addTodo('refactor class')
-addTodo('finish todo app')
-addTodo('do presentation')
 
 function deleteTodo(todo) {
   console.log('delete todo', todo);
@@ -39,16 +25,23 @@ const createTodoListItem = (todo) => {
   console.log('todo', todo);
   const li = document.createElement('LI');
 
+  const input = document.createElement('input');
+  input.classList.add('macos-grey');
+  input.classList.add('macos-font-color');
+  input.type = 'text';
+  input.border = 'none';
+  input.value = todo.title;
+
   const a = document.createElement('a');
   a.classList.add('small');
   a.classList.add('macos-font-color');
-  a.textContent = todo.title;
 
   const deleteSpan = document.createElement('SPAN');
   deleteSpan.id = todo._id;
   deleteSpan.addEventListener('click', deleteTodo.bind(this, todo));
   deleteSpan.classList.add('fa');
   deleteSpan.classList.add('fa-times');
+  deleteSpan.classList.add('transparent');
 
   const addSpan = document.createElement('SPAN');
   addSpan.id = todo._id;
@@ -56,8 +49,9 @@ const createTodoListItem = (todo) => {
   addSpan.classList.add('fa');
   addSpan.classList.add('fa-check');
 
-  a.appendChild(deleteSpan);
   a.appendChild(addSpan);
+  a.appendChild(input);
+  a.appendChild(deleteSpan);
   li.appendChild(a);
 
   return li;
@@ -82,9 +76,7 @@ db.changes({
   live: true
 }).on('change', showAllTodos);
 
-
 document.addEventListener('DOMContentLoaded', () => {
   const list = document.getElementById("list");
   showAllTodos();
-  console.log(list);
 });
