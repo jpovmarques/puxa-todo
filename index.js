@@ -5,8 +5,8 @@ const db = new PouchDB('todos');
 function create(id, text) {
   const todo = {
     _id: id,
-    title: text,
-    completed: false
+    title: '',
+    completed: false,
   };
   db.put(todo);
 }
@@ -21,8 +21,8 @@ function update(todo, text) {
   db.put(newTodo);
 }
 
-function addTodo(text) {
-  create(uuidv4(), text);
+function addTodo() {
+  create(uuidv4());
 }
 
 function updateTodo(todo, text) {
@@ -59,6 +59,36 @@ function onSubmitTodo(event, input, todo) {
     }
 }
 
+const createTopListItem = () => {
+  const li = document.createElement('LI');
+  li.classList.add("disabled");
+  li.classList.add("menu-item-top");
+  const a = document.createElement('a');
+  a.classList.add('small');
+  a.text = `You have ${'some tasks'} to finish!`;
+
+  li.appendChild(a);
+
+  return li;
+}
+
+const createBottomListItem = () => {
+  const li = document.createElement('LI');
+  li.classList.add("disabled");
+  li.classList.add("menu-item-top");
+  const a = document.createElement('a');
+  a.classList.add('small');
+
+  const addSpan = document.createElement('SPAN');
+  addSpan.addEventListener('click', addTodo.bind(this));
+  addSpan.classList.add('fa');
+  addSpan.classList.add('fa-plus');
+
+  a.appendChild(addSpan);
+  li.appendChild(a);
+
+  return li;
+}
 
 const createTodoListItem = (todo) => {
   const li = document.createElement('LI');
@@ -67,11 +97,10 @@ const createTodoListItem = (todo) => {
   input.addEventListener('focus', onFocusTodo.bind(this, input, todo));
   input.addEventListener('blur', onBlurTodo.bind(this, input, todo));
   input.addEventListener('keypress', (e) => { onSubmitTodo(e, input, todo) });
-  input.classList.add('macos-grey');
-  input.classList.add('macos-font-color');
   input.type = 'text';
   input.border = 'none';
   input.value = todo.title;
+  input.size = 34;
 
   const a = document.createElement('a');
   a.classList.add('small');
@@ -100,10 +129,14 @@ const createTodoListItem = (todo) => {
 
 const redrawTodosUI = (allTodos) => {
   const ul = document.getElementById('list');
+  let count = 0;
   ul.innerHTML = '';
+
+  ul.appendChild(createTopListItem());
   allTodos.forEach((todo) => {
     ul.appendChild(createTodoListItem(todo.doc));
   });
+  ul.appendChild(createBottomListItem());
 }
 
 const showAllTodos = () => {

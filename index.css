@@ -2,12 +2,16 @@
   background: rgb(234, 234, 253) !important;
 }
 
-.macos-font-colot {
+.macos-font-color {
   color: #1a1a1a !important;
 }
 
 .transparent {
   color: transparent !important;
+}
+
+.menu-item-top {
+  color: black !important;
 }
 
 a {
@@ -28,7 +32,7 @@ input {
   font-family: "Lucida Grande";
   border: 0;
   background: transparent !important;
-  cursor:pointer;
+  cursor:default;
 }
 
 input:hover ~ span {
