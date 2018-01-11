@@ -2,17 +2,34 @@
 
 const db = new PouchDB('todos');
 
-function addTodo(text) {
+function create(id, text) {
   const todo = {
-    _id: uuidv4(),
+    _id: id,
     title: text,
     completed: false
   };
   db.put(todo);
 }
 
+function update(todo, text) {
+  const newTodo = {
+    _id: todo._id,
+    _rev: todo._rev,
+    title: text,
+    completed: false,
+  };
+  db.put(newTodo);
+}
+
+function addTodo(text) {
+  create(uuidv4(), text);
+}
+
+function updateTodo(todo, text) {
+  update(todo, text);
+}
+
 function deleteTodo(todo) {
-  console.log('delete todo', todo);
   db.remove(todo);
 }
 
@@ -20,12 +37,36 @@ function toggleTodo(todo) {
   console.log('toggle todo', todo);
 }
 
+function changeInputState(input, todo) {
+  input.disabled = false;
+  input.select();
+}
+
+function onFocusTodo(input, todo) {
+  changeInputState(input, todo);
+}
+
+function onBlurTodo(input, todo) {
+  updateTodo(todo, input.value);
+  input.disabled = false;
+}
+
+function onSubmitTodo(event, input, todo) {
+  const key = event.which || event.keyCode;
+    if (key === 13) { 
+      input.blur();
+      input.disabled = false;
+    }
+}
+
 
 const createTodoListItem = (todo) => {
-  console.log('todo', todo);
   const li = document.createElement('LI');
 
   const input = document.createElement('input');
+  input.addEventListener('focus', onFocusTodo.bind(this, input, todo));
+  input.addEventListener('blur', onBlurTodo.bind(this, input, todo));
+  input.addEventListener('keypress', (e) => { onSubmitTodo(e, input, todo) });
   input.classList.add('macos-grey');
   input.classList.add('macos-font-color');
   input.type = 'text';
