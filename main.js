@@ -3,12 +3,12 @@ const menubar = require('menubar')
 const options = {
   height:165,
   width:300,
+  resizable: false,
 }
 
 const mb = menubar(options);
 
 mb.on('ready', function ready () {
-  console.log('app ready');
   item = mb.tray;
 })
 

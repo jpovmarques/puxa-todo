@@ -128,7 +128,7 @@ const createTodoListItem = (todo) => {
     todoTitle = todoTitle.substring(0, 35) + '...';
   }
 
-  input.value = capitalizeFirstLetter(todoTitle);
+  input.value = todoTitle;
   input.size = 34;
 
   if (todoTitle === '') {
