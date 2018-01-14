@@ -1,6 +1,7 @@
 // TODO: add new icon for time schedule with notification
 
 const db = new PouchDB('todos');
+const uuidv4 = require('uuid/v4');
 
 function create(id, text) {
   const todo = {
@@ -11,13 +12,25 @@ function create(id, text) {
   db.put(todo);
 }
 
-function update(todo, text) {
+function updateText(todo, text) {
   const newTodo = {
     _id: todo._id,
     _rev: todo._rev,
     title: text,
-    completed: false,
+    completed: todo.completed,
   };
+  db.put(newTodo);
+}
+
+function updateState(todo) {
+  console.log('before', todo);
+  const newTodo = {
+    _id: todo._id,
+    _rev: todo._rev,
+    title: todo.title,
+    completed: !todo.completed,
+  };
+  console.log('after', newTodo);
   db.put(newTodo);
 }
 
@@ -26,7 +39,7 @@ function addTodo() {
 }
 
 function updateTodo(todo, text) {
-  update(todo, text);
+  updateText(todo, text);
 }
 
 function deleteTodo(todo) {
@@ -34,7 +47,7 @@ function deleteTodo(todo) {
 }
 
 function toggleTodo(todo) {
-  console.log('toggle todo', todo);
+  updateState(todo);
 }
 
 function changeInputState(input, todo) {
@@ -64,8 +77,9 @@ const createTopListItem = () => {
   li.classList.add("disabled");
   li.classList.add("menu-item-top");
   const a = document.createElement('a');
+  a.id = "message"
   a.classList.add('small');
-  a.text = `You have ${'some tasks'} to finish!`;
+  a.text = `You have 0 tasks.`;
 
   li.appendChild(a);
 
@@ -83,6 +97,7 @@ const createBottomListItem = () => {
   addSpan.addEventListener('click', addTodo.bind(this));
   addSpan.classList.add('fa');
   addSpan.classList.add('fa-plus');
+  addSpan.classList.add('menu-item-top');
 
   a.appendChild(addSpan);
   li.appendChild(a);
@@ -100,24 +115,26 @@ const createTodoListItem = (todo) => {
   input.type = 'text';
   input.border = 'none';
   input.value = todo.title;
-  input.size = 34;
+  input.size = 33;
 
   const a = document.createElement('a');
   a.classList.add('small');
   a.classList.add('macos-font-color');
 
   const deleteSpan = document.createElement('SPAN');
-  deleteSpan.id = todo._id;
+  deleteSpan.id = "delete-icon";
   deleteSpan.addEventListener('click', deleteTodo.bind(this, todo));
   deleteSpan.classList.add('fa');
   deleteSpan.classList.add('fa-times');
   deleteSpan.classList.add('transparent');
 
   const addSpan = document.createElement('SPAN');
-  addSpan.id = todo._id;
   addSpan.addEventListener('click', toggleTodo.bind(this, todo));
   addSpan.classList.add('fa');
-  addSpan.classList.add('fa-check');
+  addSpan.classList.add('fa-check-circle');
+  if (!todo.completed) {
+    addSpan.classList.add('fade-icon');
+  } 
 
   a.appendChild(addSpan);
   a.appendChild(input);
@@ -128,12 +145,17 @@ const createTodoListItem = (todo) => {
 }
 
 const redrawTodosUI = (allTodos) => {
-  const ul = document.getElementById('list');
   let count = 0;
+  const ul = document.getElementById('list');
   ul.innerHTML = '';
-
   ul.appendChild(createTopListItem());
+
   allTodos.forEach((todo) => {
+    if (!todo.doc.completed) {
+      const a = document.getElementById('message');
+      count += 1;
+      a.text = `You have ${count} tasks to finish.`;
+    }
     ul.appendChild(createTodoListItem(todo.doc));
   });
   ul.appendChild(createBottomListItem());

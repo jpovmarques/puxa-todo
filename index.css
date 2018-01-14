@@ -10,6 +10,10 @@
   color: transparent !important;
 }
 
+.fade-icon {
+  color:rgb(192, 192, 194);
+}
+
 .menu-item-top {
   color: black !important;
 }
@@ -24,8 +28,7 @@ a:hover {
 }
 
 span:hover {
-  color: black !important;
-  cursor:pointer;
+    cursor:pointer;
 }
 
 input {
@@ -33,12 +36,17 @@ input {
   border: 0;
   background: transparent !important;
   cursor:default;
+  padding-left: 10;
 }
 
-input:hover ~ span {
+a:hover #delete-icon {
   color: black !important;
 }
 
 input:focus {
   outline: none;
+}
+
+input[type="text"]:hover{
+  cursor:pointer;
 }
