@@ -92,6 +92,8 @@ const createBottomListItem = () => {
   li.classList.add("menu-item-top");
   const a = document.createElement('a');
   a.classList.add('small');
+  a.classList.add('plus-height');
+  a.classList.add('plus-link');
 
   const addSpan = document.createElement('SPAN');
   addSpan.addEventListener('click', addTodo.bind(this));
@@ -115,7 +117,7 @@ const createTodoListItem = (todo) => {
   input.type = 'text';
   input.border = 'none';
   input.value = todo.title;
-  input.size = 33;
+  input.size = 34;
 
   const a = document.createElement('a');
   a.classList.add('small');

@@ -1,9 +1,9 @@
 .macos-grey {
-  background: rgb(234, 234, 253) !important;
+  background: rgb(243, 243, 243) !important;
 }
 
 .macos-font-color {
-  color: #1a1a1a !important;
+  color: rgba(26, 26, 26, 0.86) !important;
 }
 
 .transparent {
@@ -15,11 +15,20 @@
 }
 
 .menu-item-top {
-  color: black !important;
+  color: rgba(26, 26, 26, 0.86) !important;
 }
 
-a {
-  font-family: "Lucida Grande";
+.plus-height {
+  height: 21 !important;
+}
+
+.plus-link {
+  border-bottom: 0px solid !important;
+}
+
+body {
+  font-family: -apple-system-headline, BlinkMacSystemFont, sans-serif !important;
+  font-size: 18 !important;
 }
 
 a:hover {
@@ -28,19 +37,30 @@ a:hover {
 }
 
 span:hover {
-    cursor:pointer;
+  cursor:pointer;
 }
 
 input {
-  font-family: "Lucida Grande";
+  font-weight: normal !important;
+  color: rgb(43, 43, 40); !important;
   border: 0;
   background: transparent !important;
   cursor:default;
-  padding-left: 10;
+  padding-left: 8;
+  padding-right: 8;
+}
+
+a {
+  padding-left: 8 !important;
+  padding-right: 8 !important;
+  padding-top: 4 !important;
+  padding-bottom: 4 !important;
+  border-bottom: 1.5px solid rgba(0,0,0,.080) !important;
+
 }
 
 a:hover #delete-icon {
-  color: black !important;
+  color: rgba(26, 26, 26, 0.86) !important;
 }
 
 input:focus {
