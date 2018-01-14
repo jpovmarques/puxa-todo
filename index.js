@@ -1,11 +1,10 @@
-// TODO: add new icon for time schedule with notification
-
 const db = new PouchDB('todos');
 const uuidv4 = require('uuid/v4');
 
 function create(id, text) {
   const todo = {
     _id: id,
+    created: Date.now(),
     title: '',
     completed: false,
   };
@@ -16,6 +15,7 @@ function updateText(todo, text) {
   const newTodo = {
     _id: todo._id,
     _rev: todo._rev,
+    created: todo.created,
     title: text,
     completed: todo.completed,
   };
@@ -23,19 +23,19 @@ function updateText(todo, text) {
 }
 
 function updateState(todo) {
-  console.log('before', todo);
   const newTodo = {
     _id: todo._id,
     _rev: todo._rev,
+    created: todo.created,
     title: todo.title,
     completed: !todo.completed,
   };
-  console.log('after', newTodo);
   db.put(newTodo);
 }
 
 function addTodo() {
-  create(uuidv4());
+  // create(uuidv4());
+  create(String(Date.now()))
 }
 
 function updateTodo(todo, text) {
@@ -52,6 +52,7 @@ function toggleTodo(todo) {
 
 function changeInputState(input, todo) {
   input.disabled = false;
+  input.value = todo.title;
   input.select();
 }
 
@@ -70,6 +71,10 @@ function onSubmitTodo(event, input, todo) {
       input.blur();
       input.disabled = false;
     }
+}
+
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const createTopListItem = () => {
@@ -116,8 +121,20 @@ const createTodoListItem = (todo) => {
   input.addEventListener('keypress', (e) => { onSubmitTodo(e, input, todo) });
   input.type = 'text';
   input.border = 'none';
-  input.value = todo.title;
+
+  let todoTitle = todo.title;
+
+  if (todoTitle.length >= 37) {
+    todoTitle = todoTitle.substring(0, 35) + '...';
+  }
+
+  input.value = capitalizeFirstLetter(todoTitle);
   input.size = 34;
+
+  if (todoTitle === '') {
+    input.value = 'Write your task...';
+    input.classList.add('fade-icon');
+  }
 
   const a = document.createElement('a');
   a.classList.add('small');
@@ -134,6 +151,7 @@ const createTodoListItem = (todo) => {
   addSpan.addEventListener('click', toggleTodo.bind(this, todo));
   addSpan.classList.add('fa');
   addSpan.classList.add('fa-check-circle');
+
   if (!todo.completed) {
     addSpan.classList.add('fade-icon');
   } 
@@ -164,7 +182,7 @@ const redrawTodosUI = (allTodos) => {
 }
 
 const showAllTodos = () => {
-  db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+  db.allDocs({include_docs: true, descending: false}, function(err, doc) {
     redrawTodosUI(doc.rows);
   });
 }
