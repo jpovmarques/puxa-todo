@@ -1,16 +1,38 @@
 {
-  "name": "puxa-quantum",
-  "version": "1.0.0",
-  "devDependencies": {
-    "electron-packager": "^8.0.0",
-    "electron-prebuilt": "^1.4.1"
-  },
-  "dependencies": {
-    "menubar": "^5.2.3",
-    "uuid": "^3.1.0"
-  },
+  "name": "Tasks",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Minimalist menu bar app for task management.",
+  "author": "João Marques jpovmarques@gmail.com",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "postinstall": "install-app-deps",
+    "start": "yarn && electron .",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "no-id",
+    "dmg": {
+      "contents": [{
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  },
+    "dependencies": {
+      "menubar": "^5.2.3"
+    },
+    "devDependencies": {
+      "electron-builder": "^19.53.6",
+      "electron-packager": "^8.0.0",
+      "electron-prebuilt": "^1.4.1"
+    }
   }
-}

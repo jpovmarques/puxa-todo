@@ -1,5 +1,4 @@
 const db = new PouchDB('todos');
-const uuidv4 = require('uuid/v4');
 
 function create(id, text) {
   const todo = {
@@ -34,7 +33,6 @@ function updateState(todo) {
 }
 
 function addTodo() {
-  // create(uuidv4());
   create(String(Date.now()))
 }
 
