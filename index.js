@@ -1,4 +1,4 @@
-const db = new PouchDB('todos');
+const db = new PouchDB('todos-dev1');
 
 function create(id, text) {
   const todo = {
@@ -6,6 +6,7 @@ function create(id, text) {
     created: Date.now(),
     title: '',
     completed: false,
+    touched: false,
   };
   db.put(todo);
 }
@@ -17,6 +18,7 @@ function updateText(todo, text) {
     created: todo.created,
     title: text,
     completed: todo.completed,
+    touched: true,
   };
   db.put(newTodo);
 }
@@ -28,6 +30,7 @@ function updateState(todo) {
     created: todo.created,
     title: todo.title,
     completed: !todo.completed,
+    touched: true,
   };
   db.put(newTodo);
 }
@@ -110,7 +113,7 @@ const createBottomListItem = () => {
   return li;
 }
 
-const createTodoListItem = (todo) => {
+const createTodoListItem = (todo, isLast) => {
   const li = document.createElement('LI');
 
   const input = document.createElement('input');
@@ -132,6 +135,10 @@ const createTodoListItem = (todo) => {
   if (todoTitle === '') {
     input.value = 'Write your task...';
     input.classList.add('fade-icon');
+
+    if (isLast && !todo.touched) {
+      setTimeout(() => { input.focus(); }, 500);
+    }
   }
 
   const a = document.createElement('a');
@@ -168,13 +175,18 @@ const redrawTodosUI = (allTodos) => {
   ul.innerHTML = '';
   ul.appendChild(createTopListItem());
 
-  allTodos.forEach((todo) => {
+  allTodos.forEach((todo, index, array) => {
     if (!todo.doc.completed) {
       const a = document.getElementById('message');
       count += 1;
       a.text = `You have ${count} tasks to finish.`;
     }
-    ul.appendChild(createTodoListItem(todo.doc));
+
+    if(index === array.length - 1) {
+      ul.appendChild(createTodoListItem(todo.doc, true));  
+    } else {
+      ul.appendChild(createTodoListItem(todo.doc));
+    }
   });
   ul.appendChild(createBottomListItem());
 }

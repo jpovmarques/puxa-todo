@@ -6,8 +6,7 @@
   "author": "João Marques jpovmarques@gmail.com",
   "main": "main.js",
   "scripts": {
-    "postinstall": "install-app-deps",
-    "start": "yarn && electron .",
+    "start": "electron .",
     "pack": "build --dir",
     "dist": "build"
   },
